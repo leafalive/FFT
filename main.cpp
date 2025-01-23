@@ -9,11 +9,9 @@ int main() {
     Eigen::MatrixXcd A(3,3);
     A << 2,1,2,  3,2,1,  1,2,3;
     std::cout << A << std::endl;
-    std::cout << FFT::fft(A,-1,1);
-//    std::cout << "Hello, World!" << std::endl;
-//    for(int i = 0;i < 10;i++) {
-//        std::cout << i << " ";
-//    }
+    std::cout << FFT::fft(A,3,1) << std::endl;
+    std::cout << FFT::fft(A,2,1) << std::endl;
+    std::cout << FFT::fft(A,2,2) << std::endl;
     return 0;
 }
 /*

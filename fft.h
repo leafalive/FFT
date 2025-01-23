@@ -8,10 +8,10 @@
 #include "unsupported/Eigen/FFT"
 
 namespace FFT {
-    Eigen::VectorXd fft(Eigen::VectorXd & A);
-    Eigen::MatrixXcd fft(Eigen::MatrixXcd &A);
-    Eigen::MatrixXcd fft(Eigen::MatrixXcd &A, int n);
-    Eigen::MatrixXcd fft(Eigen::MatrixXcd &A, int n,int dim );
+//    Eigen::VectorXd fft(Eigen::VectorXd & A);
+//    Eigen::MatrixXcd fft(Eigen::MatrixXcd &A);
+//    Eigen::MatrixXcd fft(Eigen::MatrixXcd &A, int n);
+    Eigen::MatrixXcd fft(Eigen::MatrixXcd &A, int n = 0,int dim = 1 );
 }
 #endif //FFT_FFT_H
 
