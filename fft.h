@@ -12,6 +12,7 @@ namespace FFT {
 //    Eigen::MatrixXcd fft(Eigen::MatrixXcd &A);
 //    Eigen::MatrixXcd fft(Eigen::MatrixXcd &A, int n);
     Eigen::MatrixXcd fft(Eigen::MatrixXcd &A, int n = 0,int dim = 1 );
+    Eigen::MatrixXcd ifft(Eigen::MatrixXcd &A, int n = 0,int dim = 1 );
 }
 #endif //FFT_FFT_H
 

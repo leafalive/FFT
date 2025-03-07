@@ -4,7 +4,6 @@ project(FFT)
 set(CMAKE_CXX_STANDARD 14)
 
 find_package(Eigen3 CONFIG REQUIRED)
-
 add_executable(FFT main.cpp
         fft.cpp
         fft.cpp
@@ -12,5 +11,4 @@ add_executable(FFT main.cpp
         fft.h)
 
 target_link_libraries(FFT PRIVATE Eigen3::Eigen)
-
 
