@@ -8,13 +8,6 @@ using namespace af;
 int main() {
     af::setDevice(0);
     af::info();
-//
-//  int N = 1000;
-//  af::array t = af::seq(0, N-1) / (double)N;
-//  af::array x = af::sin(2 * af::Pi * 5 * t) + 0.5 * af::randn(N, f64);
-//
-//  af::array b = af::constant(0.2, 5, f64);
-
 
     std::vector<float> h_x = {0,0,0,0,0,1,1,1,1,1};
     af::array x(10, h_x.data());
@@ -24,6 +17,18 @@ int main() {
     af::array b(5, h_b.data());
     af::array a(1, h_a.data());
 
+
+//    int n = 100;
+//    std::vector<float> h_x(n);
+//    for (int i=0; i<n; ++i)
+//      h_x[i] = sin(2 * af::Pi * 0.1 * i);
+//
+//    af::array x(n, h_x.data());
+//
+//    std::vector<float> h_b = {0.1f, 0.2f, 0.4f, 0.2f, 0.1f};
+//    std::vector<float> h_a = {1.0f, -0.5f, 0.2f};
+//    af::array b(5, h_b.data());
+//    af::array a(3, h_a.data());
     af::array y = filtfilt::filtfilt(b, a, x);
     af_print(y);
 

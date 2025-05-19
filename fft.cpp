@@ -121,16 +121,14 @@ namespace filtfilt {
 
     int len_a = a.dims(0);
     int len_b = b.dims(0);
+    int n = x.dims(0);
     int filter_order = max(len_a, len_b) - 1;
     int n_pad = 3 * filter_order;
 
 
-    int n = x.dims(0);
+    n_pad = min(n_pad, n - 1);
+    if (n_pad < 1) n_pad = 1;
 
-
-    if (n <= n_pad) {
-      return x;
-    }
 
 
     af::array x_pre = af::flip(x(af::seq(n_pad)), 0);
