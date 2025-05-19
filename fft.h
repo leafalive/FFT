@@ -6,6 +6,7 @@
 #define FFT_FFT_H
 #include "Eigen/Dense"
 #include "unsupported/Eigen/FFT"
+#include "arrayfire.h"
 
 namespace FFT {
 //    Eigen::VectorXd fft(Eigen::VectorXd & A);
@@ -14,6 +15,10 @@ namespace FFT {
     Eigen::MatrixXcd fft(Eigen::MatrixXcd &A, int n = 0,int dim = 1 );
     Eigen::MatrixXcd ifft(Eigen::MatrixXcd &A, int n = 0,int dim = 1 );
     Eigen::MatrixXcd conv(Eigen::MatrixXcd &A, Eigen::MatrixXcd &B);
+}
+namespace filtfilt {
+    af::array filtfilt(const af::array &b, const af::array &a, const af::array &x);
+    af::array designLowpassFIR(int order, float cutoff, float fs);
 }
 #endif //FFT_FFT_H
 

@@ -2,6 +2,7 @@
 // Created by Yanran LI on 2025/1/19.
 //
 #include "fft.h"
+using namespace af;
 namespace FFT {
 
     Eigen::MatrixXcd fft(Eigen::MatrixXcd &A, int n,int dim ) {
@@ -112,4 +113,86 @@ namespace FFT {
 
         return result;
     }
+}
+
+namespace filtfilt {
+
+af::array filtfilt(const af::array &b, const af::array &a, const af::array &x) {
+    // 获取填充长度
+    int len_a = a.dims(0);
+    int len_b = b.dims(0);
+    int filter_order = max(len_a, len_b) - 1;
+    int n_pad = 3 * filter_order;
+
+    // 原信号长度
+    int n = x.dims(0);
+
+    // 处理边缘情况：信号太短
+    if (n <= n_pad) {
+      return x; // 无法正确填充，返回原信号
+    }
+
+    // 生成填充信号
+    // 前向填充：取前n_pad个元素并反转
+    af::array x_pre = af::flip(x(af::seq(n_pad)), 0);
+    // 后向填充：取后n_pad个元素并反转
+    af::array x_post = af::flip(x(af::seq(n - n_pad, n - 1)), 0);
+    // 拼接填充后的信号
+    af::array x_padded = af::join(0, x_pre, x, x_post);
+
+    // 前向滤波函数
+    auto forward_filter = [](const af::array &x, const af::array &b,
+                           const af::array &a) {
+        int len_x = x.dims(0);
+        int len_b = b.dims(0);
+        int len_a = a.dims(0);
+
+        // 将系数复制到主机内存
+        std::vector<float> h_a(a.elements());
+        a.host(h_a.data());
+        std::vector<float> h_b(b.elements());
+        b.host(h_b.data());
+
+        // 将输入信号复制到主机内存
+        std::vector<float> h_x(x.elements());
+        x.host(h_x.data());
+
+        std::vector<float> h_y(len_x, 0.0f);
+
+        for (int i = 0; i < len_x; ++i) {
+            float sum_b = 0.0f;
+            for (int k = 0; k < len_b; ++k) {
+                if (i - k >= 0) {
+                    sum_b += h_b[k] * h_x[i - k];
+                }
+            }
+
+            float sum_a = 0.0f;
+            for (int k = 1; k < len_a; ++k) {
+                if (i - k >= 0) {
+                    sum_a += h_a[k] * h_y[i - k];
+                }
+            }
+
+            h_y[i] = (sum_b - sum_a) / h_a[0];
+        }
+
+        return af::array(len_x, h_y.data());
+    };
+
+    // 第一次前向滤波
+    af::array y_forward = forward_filter(x_padded, b, a);
+
+    // 反转信号
+    af::array y_reversed = af::flip(y_forward, 0);
+
+    // 第二次前向滤波
+    af::array y_reversed_filtered = forward_filter(y_reversed, b, a);
+
+    // 反转结果并裁剪填充部分
+    af::array y_filtfilt = af::flip(y_reversed_filtered, 0);
+    y_filtfilt = y_filtfilt(af::seq(n_pad, n_pad + n - 1));
+
+    return y_filtfilt;
+}
 }
